@@ -1,0 +1,632 @@
+<title>Black British History Timeline</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap">
+<style>
+/* Layout: one vertical spine; era bands group events; date column left, card right; collapses to one column on phones */
+:root {
+  --bg: #F4F5F8;
+  --surface: #FFFFFF;
+  --fg: #17161D;
+  --muted: #55535F;
+  --line: #D8D9E1;
+  --accent: #0D6A51;
+  --accent-soft: #E1F1EB;
+  --on-accent: #FFFFFF;
+
+  --t-presence: #4338CA;
+  --t-empire: #9A5600;
+  --t-resist: #B42318;
+  --t-war: #4A5D2A;
+  --t-migration: #0E7490;
+  --t-rights: #7E22CE;
+  --t-culture: #BE185D;
+
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+
+  --step--1: 0.84rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(2rem, 5vw, 3.2rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111117; --surface: #1A1A22; --fg: #ECEBF2; --muted: #A9A7B6; --line: #2D2D39;
+    --accent: #52D0A6; --accent-soft: #15322A; --on-accent: #0B1F18;
+    --t-presence: #A5B4FC; --t-empire: #F2B256; --t-resist: #F7837B; --t-war: #B3CC7A;
+    --t-migration: #5FD3EC; --t-rights: #D4A8FB; --t-culture: #F48BBF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111117; --surface: #1A1A22; --fg: #ECEBF2; --muted: #A9A7B6; --line: #2D2D39;
+  --accent: #52D0A6; --accent-soft: #15322A; --on-accent: #0B1F18;
+  --t-presence: #A5B4FC; --t-empire: #F2B256; --t-resist: #F7837B; --t-war: #B3CC7A;
+  --t-migration: #5FD3EC; --t-rights: #D4A8FB; --t-culture: #F48BBF;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.55;
+}
+.wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* Header */
+header.top { padding-block: 40px 24px; display: grid; gap: 14px; }
+.eyebrow {
+  font-size: var(--step--1); letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent); font-weight: 700;
+}
+h1 { font-size: var(--step-3); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; }
+.lede { max-width: 64ch; color: var(--muted); font-size: var(--step-1); margin: 0; }
+
+.guide {
+  display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  padding-block: 18px; margin-top: 8px;
+}
+.guide h2 { font-size: var(--step-0); font-weight: 700; margin-bottom: 4px; }
+.guide p, .guide ul { margin: 0; color: var(--muted); font-size: var(--step--1); }
+.guide ul { padding-left: 1.1em; display: grid; gap: 2px; }
+
+/* Controls */
+.controls {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.controls .wrap { padding-block: 12px; display: grid; gap: 10px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
+.seg button {
+  font: inherit; font-size: var(--step--1); font-weight: 700; border: 0; background: transparent; color: var(--fg);
+  padding: 7px 14px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.search { flex: 1 1 200px; min-width: 0; }
+.search input {
+  width: 100%; font: inherit; font-size: var(--step--1); padding: 8px 12px;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--fg);
+}
+.chip {
+  font: inherit; font-size: var(--step--1); cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+}
+.chip .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); flex: none; }
+.chip[aria-pressed="true"] { border-color: var(--c); box-shadow: inset 0 0 0 1px var(--c); font-weight: 700; }
+.chip.clear { border-style: dashed; }
+.status { font-size: var(--step--1); color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Timeline */
+main { padding-block: 8px 48px; }
+.era { margin-top: 36px; }
+.era-head { display: grid; gap: 4px; padding-bottom: 12px; }
+.era-head .range { font-family: var(--font-display); font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.era-head h2 { font-size: var(--step-2); font-weight: 700; }
+.era-head p { margin: 0; color: var(--muted); max-width: 66ch; }
+
+ol.events { list-style: none; margin: 0; padding: 0; position: relative; }
+ol.events::before {
+  content: ""; position: absolute; left: 112px; top: 6px; bottom: 6px; width: 2px; background: var(--line);
+}
+.ev { display: grid; grid-template-columns: 100px 1fr; gap: 26px; padding-block: 10px; position: relative; }
+.ev::before {
+  content: ""; position: absolute; left: 106px; top: 22px; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--surface); border: 3px solid var(--c);
+}
+.date {
+  font-family: var(--font-display); font-weight: 800; font-size: var(--step-1); text-align: right;
+  padding-top: 12px; font-variant-numeric: tabular-nums; line-height: 1.2;
+}
+.card {
+  min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 18px; display: grid; gap: 8px;
+}
+.card h3 { font-size: var(--step-1); font-weight: 700; line-height: 1.25; }
+.card p { margin: 0; max-width: 68ch; }
+.people { font-size: var(--step--1); color: var(--muted); }
+.people b { color: var(--fg); }
+.ask {
+  font-size: var(--step--1); background: var(--accent-soft); border-radius: 6px; padding: 8px 10px; max-width: 68ch;
+}
+.ask b { color: var(--accent); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  font-size: 0.76rem; letter-spacing: 0.02em; padding: 2px 8px; border-radius: 4px;
+  border: 1px solid var(--line); color: var(--muted);
+}
+.tag.theme { color: var(--c); border-color: currentColor; font-weight: 700; }
+mark { background: var(--accent-soft); color: inherit; border-radius: 2px; }
+.empty { padding: 40px 0; color: var(--muted); }
+
+/* Curriculum map */
+.map { border-top: 1px solid var(--line); padding-block: 32px 56px; display: grid; gap: 18px; }
+.map h2 { font-size: var(--step-2); }
+.map > p { margin: 0; color: var(--muted); max-width: 66ch; }
+.cols { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.cols h3 { font-size: var(--step-0); margin-bottom: 8px; }
+.cols ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.cols button {
+  width: 100%; text-align: left; font: inherit; font-size: var(--step--1); cursor: pointer;
+  display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: baseline;
+  padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--fg);
+}
+.cols button:hover { border-color: var(--accent); }
+.cols .n { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--accent); }
+.foot { font-size: var(--step--1); color: var(--muted); max-width: 70ch; }
+
+@media (max-width: 640px) {
+  ol.events::before { left: 6px; }
+  .ev { grid-template-columns: 1fr; gap: 4px; padding-left: 26px; }
+  .ev::before { left: 0; top: 6px; }
+  .date { text-align: left; padding-top: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+</style>
+
+<header class="top wrap">
+  <div class="eyebrow">KS3 History · GCSE AQA 8145 thematic study</div>
+  <h1>Black British History Timeline</h1>
+  <p class="lede">Black people have been part of British history for nearly 2,000 years. This timeline runs from Roman York to the present day. Every event is linked to the KS3 National Curriculum and to <i>Britain: Migration, empires and the people, c790 to the present day</i>.</p>
+  <div class="guide">
+    <div>
+      <h2>How to use it</h2>
+      <p>Filter by key stage or theme, or search for a person or place. Each event has an enquiry question you can use as a starter, a discussion point or an extended-writing prompt.</p>
+    </div>
+    <div>
+      <h2>Words we use</h2>
+      <ul>
+        <li><b>Enslaved people</b>, not “slaves”: people come first, not their condition.</li>
+        <li><b>Enslavers</b> for those who held people in slavery.</li>
+        <li><b>Uprising</b> or <b>rebellion</b> for organised resistance.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Big themes</h2>
+      <p>Presence, Empire and trade, Resistance, War and service, Migration, Rights and activism, and Culture. They run through every era, which helps with KS4 thematic answers.</p>
+    </div>
+  </div>
+</header>
+
+<div class="controls" role="region" aria-label="Filters">
+  <div class="wrap">
+    <div class="row">
+      <div class="seg" role="group" aria-label="Key stage">
+        <button type="button" id="stage-all" data-stage="all" aria-pressed="true">All</button>
+        <button type="button" id="stage-ks3" data-stage="ks3" aria-pressed="false">KS3</button>
+        <button type="button" id="stage-ks4" data-stage="ks4" aria-pressed="false">KS4 · AQA</button>
+      </div>
+      <label class="search"><span hidden>Search</span>
+        <input id="q" type="search" placeholder="Search people, places, events…" aria-label="Search the timeline">
+      </label>
+    </div>
+    <div class="row" id="themes" aria-label="Themes"></div>
+    <div class="row"><span class="status" id="status" aria-live="polite"></span><span id="curchip"></span></div>
+  </div>
+</div>
+
+<main class="wrap" id="timeline"></main>
+
+<section class="map wrap" id="map">
+  <h2>Curriculum map</h2>
+  <p>The number of events linked to each part of the curriculum. Select a row to show only those events.</p>
+  <div class="cols">
+    <div><h3>KS3 programme of study (2013)</h3><ul id="map-ks3"></ul></div>
+    <div><h3>GCSE AQA 8145: Migration, empires and the people</h3><ul id="map-aqa"></ul></div>
+  </div>
+  <p class="foot">KS3 links use the strands of the 2013 National Curriculum programme of study for history. KS4 links use the four parts of the AQA GCSE History thematic study (8145). Check the current specification before planning assessments. Dates and figures come from established historical scholarship. Where historians disagree about numbers, the timeline gives rounded figures.</p>
+</section>
+
+<script>
+const THEMES = {
+  presence:  { label: "Presence",           c: "var(--t-presence)" },
+  empire:    { label: "Empire and trade",   c: "var(--t-empire)" },
+  resist:    { label: "Resistance",         c: "var(--t-resist)" },
+  war:       { label: "War and service",    c: "var(--t-war)" },
+  migration: { label: "Migration",          c: "var(--t-migration)" },
+  rights:    { label: "Rights and activism",c: "var(--t-rights)" },
+  culture:   { label: "Culture",            c: "var(--t-culture)" }
+};
+const KS3 = {
+  pre:   "Theme in British history before 1066",
+  tud:   "Church, state and society in Britain 1509–1745",
+  ind:   "Ideas, political power, industry and empire: Britain 1745–1901",
+  mod:   "Challenges for Britain, Europe and the wider world 1901–present",
+  world: "Significant society or issue in world history"
+};
+const AQA = {
+  1: "Part 1: Conquered and conquerors",
+  2: "Part 2: Looking west",
+  3: "Part 3: Expansion and empire",
+  4: "Part 4: Britain in the 20th century"
+};
+const ERAS = [
+  { id: "ancient", range: "AD 200 – 1500", title: "Roman Britain and African kingdoms", intro: "Africans lived in Roman Britain as soldiers, officials and residents. In Africa, rich and powerful kingdoms traded across continents." },
+  { id: "early", range: "1500 – 1745", title: "Black Tudors and the start of the slave trade", intro: "Free Black people lived and worked in Tudor England. At the same time, English merchants began to trade in enslaved Africans and set up plantation colonies in the Caribbean." },
+  { id: "empire", range: "1745 – 1901", title: "Empire, resistance and abolition", intro: "Britain became the largest slave-trading nation in the Atlantic. Enslaved people resisted, and Black and white campaigners in Britain fought for abolition. After abolition the empire kept expanding, especially in Africa." },
+  { id: "wars", range: "1901 – 1945", title: "World wars and Pan-Africanism", intro: "Black soldiers and workers served Britain in both world wars. In Britain, Black communities faced violence and a colour bar, and they organised to challenge it." },
+  { id: "windrush", range: "1945 – 2000", title: "Windrush, independence and civil rights", intro: "People from the Caribbean and Africa came to help rebuild Britain while colonies won independence. Black Britons campaigned against discrimination, and those campaigns led to new laws." },
+  { id: "today", range: "2000 – today", title: "Memory, justice and debate", intro: "Britain continues to debate how it remembers slavery and empire, and how it treats the Windrush generation and their families." }
+];
+
+const EVENTS = [
+  // Ancient
+  { era: "ancient", y: "c. 210", s: 210, th: "presence", ks3: "pre", aqa: null,
+    t: "Aurelian Moors guard Hadrian’s Wall",
+    d: "A Roman unit called the ‘Aurelian Moors’, recruited from North Africa, was stationed at Aballava, now Burgh-by-Sands in Cumbria. African soldiers were part of the army that defended Roman Britain.",
+    p: "Numerus Maurorum Aurelianorum",
+    q: "What does the presence of African soldiers tell us about who lived in Roman Britain?" },
+  { era: "ancient", y: "211", s: 211, th: "presence", ks3: "pre", aqa: null,
+    t: "Emperor Septimius Severus dies in York",
+    d: "Septimius Severus was born in Leptis Magna, in modern Libya, and became Roman emperor in 193. He campaigned in northern Britain and died at Eboracum (York) in 211.",
+    p: "Septimius Severus",
+    q: "Why might Severus’ African origins have been left out of many older histories of Roman Britain?" },
+  { era: "ancient", y: "c. 350", s: 350, th: "presence", ks3: "pre", aqa: null,
+    t: "The ‘Ivory Bangle Lady’ of York",
+    d: "In 2010 archaeologists studied the burial of a wealthy woman in Roman York who had North African ancestry. She was buried with jet and ivory bracelets, which suggests she had high status.",
+    p: "Ivory Bangle Lady",
+    q: "How can archaeology help historians find people who left no written records?" },
+  { era: "ancient", y: "1324", s: 1324, th: "culture", ks3: "world", aqa: null,
+    t: "Mansa Musa’s journey to Mecca",
+    d: "Mansa Musa, ruler of the Mali Empire, travelled to Mecca with a huge caravan carrying gold. Mali controlled trade across the Sahara, and Timbuktu became a centre of Islamic learning.",
+    p: "Mansa Musa",
+    q: "Why did European mapmakers put Mansa Musa on the Catalan Atlas of 1375?" },
+  { era: "ancient", y: "c. 1440", s: 1440, th: "culture", ks3: "world", aqa: null,
+    t: "Oba Ewuare expands the Kingdom of Benin",
+    d: "Oba Ewuare the Great rebuilt Benin City with walls and wide streets and expanded the kingdom. Guilds of bronze casters at the royal court made the famous brass plaques and heads.",
+    p: "Oba Ewuare",
+    q: "What do the Benin Bronzes reveal about the society that made them?" },
+
+  // Early modern
+  { era: "early", y: "1507", s: 1507, th: "presence", ks3: "tud", aqa: 2,
+    t: "John Blanke, royal trumpeter",
+    d: "John Blanke was paid as a trumpeter at the courts of Henry VII and Henry VIII. He appears in the Westminster Tournament Roll of 1511, one of the earliest images of a Black person in England.",
+    p: "John Blanke",
+    q: "What can wage records and the Tournament Roll tell us about John Blanke’s status?" },
+  { era: "early", y: "1548", s: 1548, th: "presence", ks3: "tud", aqa: 2,
+    t: "Jacques Francis gives evidence in court",
+    d: "Jacques Francis was a West African diver who worked to salvage guns from the wreck of the Mary Rose. In 1548 he gave evidence in the High Court of Admiralty, which shows his testimony was accepted in an English court.",
+    p: "Jacques Francis",
+    q: "Does the Jacques Francis case suggest that Black Tudors were treated as free people?" },
+  { era: "early", y: "1562", s: 1562, th: "empire", ks3: "tud", aqa: 2,
+    t: "John Hawkins’ first slaving voyage",
+    d: "John Hawkins seized about 300 Africans from the coast of Sierra Leone and sold them in the Spanish Caribbean. This was the first known English slaving voyage, and Elizabeth I later invested in his expeditions.",
+    p: "John Hawkins, Elizabeth I",
+    q: "Why did Elizabeth I support Hawkins’ voyages?" },
+  { era: "early", y: "1627", s: 1627, th: "empire", ks3: "tud", aqa: 2,
+    t: "English colonists settle Barbados",
+    d: "Barbados became one of England’s first sugar colonies. In 1661 its Slave Code set out harsh laws that treated enslaved Africans as property, and other colonies copied it.",
+    p: "",
+    q: "How did sugar change the way English colonies used labour?" },
+  { era: "early", y: "1672", s: 1672, th: "empire", ks3: "tud", aqa: 2,
+    t: "The Royal African Company is founded",
+    d: "Led by James, Duke of York (later James II), the company held a monopoly on English trade with West Africa. It transported more enslaved Africans than any other single company of the period. When its monopoly ended in 1698, merchants from Bristol and later Liverpool joined the trade.",
+    p: "James, Duke of York",
+    q: "Who in Britain profited from the slave trade, and how?" },
+
+  // Empire
+  { era: "empire", y: "1760", s: 1760, th: "resist", ks3: "ind", aqa: 3,
+    t: "Tacky’s Revolt in Jamaica",
+    d: "Enslaved Akan people led by Tacky rose up against plantation owners in Jamaica. The revolt lasted for months and was one of the largest in the 18th-century Caribbean.",
+    p: "Tacky",
+    q: "Why do some historians argue that enslaved people’s resistance was a cause of abolition?" },
+  { era: "empire", y: "1772", s: 1772, th: "rights", ks3: "ind", aqa: 3,
+    t: "The Somerset case",
+    d: "James Somerset was an enslaved man who had escaped. Lord Mansfield ruled that he could not be forced out of England to be sold in Jamaica. The ruling did not end slavery, but many people at the time believed it had.",
+    p: "James Somerset, Lord Mansfield, Granville Sharp",
+    q: "Why did people misunderstand the Somerset judgement, and why did that matter?" },
+  { era: "empire", y: "1774", s: 1774, th: "presence", ks3: "ind", aqa: 3,
+    t: "Ignatius Sancho votes in Westminster",
+    d: "Ignatius Sancho was born on a slave ship and became a shopkeeper and writer in London. As a male property owner he could vote, and he is the first Black voter known in Britain. His letters were published in 1782.",
+    p: "Ignatius Sancho",
+    q: "What does Sancho’s life suggest about the lives of Black Georgians in London?" },
+  { era: "empire", y: "1781", s: 1781, th: "empire", ks3: "ind", aqa: 3,
+    t: "The Zong massacre",
+    d: "The crew of the slave ship Zong threw about 130 Africans overboard and then claimed insurance for them as lost ‘cargo’. Olaudah Equiano told Granville Sharp, and the 1783 court case shocked the public.",
+    p: "Olaudah Equiano, Granville Sharp",
+    q: "How did the Zong case help the campaign against the slave trade?" },
+  { era: "empire", y: "1787", s: 1787, th: "rights", ks3: "ind", aqa: 3,
+    t: "The abolition campaign is organised",
+    d: "The Society for Effecting the Abolition of the Slave Trade was founded in London. In the same year Ottobah Cugoano published an attack on slavery. Black campaigners known as the Sons of Africa wrote letters to newspapers and politicians.",
+    p: "Thomas Clarkson, Ottobah Cugoano, the Sons of Africa",
+    q: "Whose role in abolition has traditionally been remembered, and whose has been left out?" },
+  { era: "empire", y: "1789", s: 1789, th: "culture", ks3: "ind", aqa: 3,
+    t: "Equiano’s Interesting Narrative",
+    d: "Olaudah Equiano described his enslavement, his purchase of his own freedom and his life in Britain. The book became a bestseller, and he toured Britain to speak against the slave trade.",
+    p: "Olaudah Equiano",
+    q: "How useful is Equiano’s Narrative as a source about the Middle Passage?" },
+  { era: "empire", y: "1791", s: 1791, th: "resist", ks3: "world", aqa: 3,
+    t: "The Haitian Revolution begins",
+    d: "Enslaved people in the French colony of Saint-Domingue rose up. Under leaders including Toussaint Louverture they defeated French, Spanish and British forces, and in 1804 Haiti became the first independent nation founded by formerly enslaved people.",
+    p: "Toussaint Louverture, Jean-Jacques Dessalines",
+    q: "Why did events in Haiti alarm British plantation owners?" },
+  { era: "empire", y: "1807", s: 1807, th: "rights", ks3: "ind", aqa: 3,
+    t: "Abolition of the Slave Trade Act",
+    d: "Parliament banned British ships from trading enslaved Africans. Slavery itself continued in British colonies. The Royal Navy’s West Africa Squadron began patrolling to stop slave ships.",
+    p: "William Wilberforce",
+    q: "Why was the trade abolished before slavery itself?" },
+  { era: "empire", y: "1831", s: 1831, th: "resist", ks3: "ind", aqa: 3,
+    t: "The Baptist War in Jamaica",
+    d: "Samuel Sharpe, a Baptist deacon, planned a peaceful strike that became a major uprising of about 60,000 enslaved people. Sharpe was executed in 1832. The uprising convinced many in Parliament that slavery could not continue.",
+    p: "Samuel Sharpe",
+    q: "How far did enslaved people free themselves?" },
+  { era: "empire", y: "1833", s: 1833, th: "rights", ks3: "ind", aqa: 3,
+    t: "Slavery Abolition Act",
+    d: "Slavery was abolished in most British colonies from 1 August 1834, but formerly enslaved people had to work as unpaid ‘apprentices’ until 1838. Enslavers received £20 million in compensation. Enslaved people received nothing. The loans that paid for it were only paid off in 2015.",
+    p: "",
+    q: "Who was compensated in 1833, and what does that tell us about whose interests mattered?" },
+  { era: "empire", y: "1833", s: 1833.5, th: "culture", ks3: "ind", aqa: 3,
+    t: "Ira Aldridge plays Othello in London",
+    d: "Ira Aldridge was an African American actor who played Othello at Covent Garden. Some critics attacked him with racist reviews. He went on to become one of the most celebrated actors in Europe.",
+    p: "Ira Aldridge",
+    q: "What do the reviews of Aldridge reveal about attitudes in 1830s Britain?" },
+  { era: "empire", y: "1848", s: 1848, th: "rights", ks3: "ind", aqa: 3,
+    t: "William Cuffay leads London Chartists",
+    d: "William Cuffay was the son of a formerly enslaved man and a leading Chartist who campaigned for working men’s right to vote. In 1849 he was transported to Tasmania for his part in the movement.",
+    p: "William Cuffay",
+    q: "Why is Cuffay often left out of the story of Chartism?" },
+  { era: "empire", y: "1855", s: 1855, th: "war", ks3: "ind", aqa: 3,
+    t: "Mary Seacole in the Crimea",
+    d: "Mary Seacole was a Jamaican-born nurse. When officials turned her down, she paid her own way to the Crimean War and set up the British Hotel to care for soldiers. Her memoir was published in 1857.",
+    p: "Mary Seacole",
+    q: "Why was Seacole famous in her lifetime, then forgotten, then remembered again?" },
+  { era: "empire", y: "1865", s: 1865, th: "resist", ks3: "ind", aqa: 3,
+    t: "Morant Bay Rebellion, Jamaica",
+    d: "Paul Bogle led a protest about poverty and injustice. Governor Eyre’s brutal response killed hundreds of people, and the response divided opinion in Britain.",
+    p: "Paul Bogle, George William Gordon, Governor Eyre",
+    q: "Why did the Morant Bay Rebellion cause a public argument in Britain?" },
+  { era: "empire", y: "1884", s: 1884, th: "empire", ks3: "ind", aqa: 3,
+    t: "Berlin Conference and the Scramble for Africa",
+    d: "European powers met in Berlin to agree rules for claiming African territory, and no Africans took part. By 1914 almost all of Africa was under European control, and Britain held the largest share.",
+    p: "",
+    q: "Why did Britain want colonies in Africa in the late 19th century?" },
+  { era: "empire", y: "1889", s: 1889, th: "culture", ks3: "ind", aqa: 3,
+    t: "Arthur Wharton, professional footballer",
+    d: "Arthur Wharton was born in the Gold Coast (now Ghana). He became the world’s first Black professional footballer and was also a record-breaking sprinter.",
+    p: "Arthur Wharton",
+    q: "What does Wharton’s career show about sport and race in Victorian Britain?" },
+  { era: "empire", y: "1897", s: 1897, th: "empire", ks3: "ind", aqa: 3,
+    t: "British forces take Benin City",
+    d: "A British expedition burned Benin City and took thousands of artworks, the Benin Bronzes, which were sold to museums across Europe. Their return is still debated today.",
+    p: "Oba Ovonramwen",
+    q: "Should museums return objects taken during colonial wars?" },
+  { era: "empire", y: "1900", s: 1900, th: "rights", ks3: "ind", aqa: 3,
+    t: "First Pan-African Conference, London",
+    d: "Henry Sylvester Williams, a lawyer from Trinidad, organised the conference at Westminster Town Hall. Delegates from Africa, the Caribbean and the USA met to challenge colonial rule and racism.",
+    p: "Henry Sylvester Williams, W. E. B. Du Bois, Samuel Coleridge-Taylor",
+    q: "Why was London an important meeting place for anti-colonial campaigners?" },
+
+  // Wars
+  { era: "wars", y: "1914–18", s: 1914, th: "war", ks3: "mod", aqa: 4,
+    t: "Black soldiers in the First World War",
+    d: "About 15,000 men served in the British West Indies Regiment. Hundreds of thousands of Africans served, many as carriers in East Africa. Walter Tull, a professional footballer, was one of the first Black officers in the British Army and was killed in 1918.",
+    p: "Walter Tull",
+    q: "Why have the contributions of colonial troops been less well remembered?" },
+  { era: "wars", y: "1919", s: 1919, th: "migration", ks3: "mod", aqa: 4,
+    t: "Race riots in British ports",
+    d: "After the war, white mobs attacked Black communities in Cardiff, Liverpool, South Shields, Glasgow and other ports. In Liverpool, Charles Wootton, a young sailor, was chased into the dock and drowned.",
+    p: "Charles Wootton",
+    q: "What caused the 1919 riots, and how did the government respond?" },
+  { era: "wars", y: "1931", s: 1931, th: "rights", ks3: "mod", aqa: 4,
+    t: "League of Coloured Peoples founded",
+    d: "Dr Harold Moody, a Jamaican-born doctor in Peckham, founded the League to campaign against the colour bar in jobs, housing and public places.",
+    p: "Harold Moody",
+    q: "What methods did the League use to challenge racism?" },
+  { era: "wars", y: "1939–45", s: 1939, th: "war", ks3: "mod", aqa: 4,
+    t: "The Second World War",
+    d: "Thousands of Caribbean volunteers joined the RAF, including Lilian Bader. Large African divisions fought in Burma. In 1944 the cricketer Learie Constantine won a court case after a London hotel turned him away.",
+    p: "Lilian Bader, Learie Constantine",
+    q: "How did the war change expectations among Black Britons and colonial subjects?" },
+  { era: "wars", y: "1945", s: 1945, th: "rights", ks3: "mod", aqa: 4,
+    t: "Fifth Pan-African Congress, Manchester",
+    d: "Future leaders of independent African nations met in Manchester and demanded an end to colonial rule.",
+    p: "Kwame Nkrumah, Jomo Kenyatta, George Padmore, Amy Ashwood Garvey",
+    q: "Why is a meeting in Manchester seen as a turning point for African independence?" },
+
+  // Windrush
+  { era: "windrush", y: "1948", s: 1948, th: "migration", ks3: "mod", aqa: 4,
+    t: "HMT Empire Windrush arrives",
+    d: "On 22 June 1948 the Windrush docked at Tilbury carrying more than 1,000 passengers, many from the Caribbean. The British Nationality Act of the same year confirmed that people from the colonies were British citizens. Many came to fill labour shortages in the NHS, transport and industry.",
+    p: "Sam King, Lord Kitchener",
+    q: "Why did people from the Caribbean come to Britain after 1945?" },
+  { era: "windrush", y: "1952–60", s: 1952, th: "resist", ks3: "mod", aqa: 4,
+    t: "The Mau Mau uprising in Kenya",
+    d: "Kikuyu fighters rose up against British colonial rule and the loss of their land. British forces detained tens of thousands of people in camps where torture took place. In 2013 the UK government paid compensation to more than 5,000 survivors.",
+    p: "Dedan Kimathi",
+    q: "How did Britain respond to resistance during decolonisation?" },
+  { era: "windrush", y: "1957", s: 1957, th: "empire", ks3: "mod", aqa: 4,
+    t: "Ghana wins independence",
+    d: "Led by Kwame Nkrumah, the Gold Coast became independent Ghana. It was the first colony in sub-Saharan Africa to win independence from Britain, and it inspired movements across the continent.",
+    p: "Kwame Nkrumah",
+    q: "Why did Britain give up most of its African colonies so quickly after 1957?" },
+  { era: "windrush", y: "1958", s: 1958, th: "migration", ks3: "mod", aqa: 4,
+    t: "Notting Hill riots",
+    d: "White gangs attacked West Indian residents in Notting Hill and Nottingham. In 1959 Kelso Cochrane, an Antiguan carpenter, was murdered in Notting Hill. His killers were never convicted.",
+    p: "Kelso Cochrane",
+    q: "How did Caribbean communities respond to violence in 1958–59?" },
+  { era: "windrush", y: "1959", s: 1959, th: "culture", ks3: "mod", aqa: 4,
+    t: "Claudia Jones’ Caribbean Carnival",
+    d: "Claudia Jones, a journalist and activist from Trinidad, organised an indoor Caribbean carnival at St Pancras Town Hall in response to the riots. Her event is one of the roots of Notting Hill Carnival.",
+    p: "Claudia Jones, Rhaune Laslett",
+    q: "How can culture be a form of protest?" },
+  { era: "windrush", y: "1960", s: 1960, th: "empire", ks3: "mod", aqa: 4,
+    t: "The ‘Wind of Change’ speech",
+    d: "In Cape Town, Prime Minister Harold Macmillan said that African nationalism was a fact that Britain had to accept. In the following years most of Britain’s African colonies became independent.",
+    p: "Harold Macmillan",
+    q: "Was decolonisation a choice Britain made or a change it was forced to accept?" },
+  { era: "windrush", y: "1962", s: 1962, th: "migration", ks3: "mod", aqa: 4,
+    t: "Commonwealth Immigrants Act",
+    d: "For the first time, citizens of Commonwealth countries were restricted from entering Britain. They now needed employment vouchers. Many people rushed to arrive before the law came into force.",
+    p: "",
+    q: "Why did British attitudes to Commonwealth migration change between 1948 and 1962?" },
+  { era: "windrush", y: "1963", s: 1963, th: "rights", ks3: "mod", aqa: 4,
+    t: "Bristol Bus Boycott",
+    d: "The Bristol Omnibus Company refused to employ Black or Asian drivers or conductors. Paul Stephenson, Roy Hackett, Guy Bailey and others organised a boycott, and after four months the colour bar was lifted. The campaign helped lead to the first Race Relations Act.",
+    p: "Paul Stephenson, Roy Hackett, Guy Bailey, Owen Henry, Audley Evans, Prince Brown",
+    q: "Why did the Bristol Bus Boycott succeed?" },
+  { era: "windrush", y: "1955", s: 1955, th: "rights", ks3: "world", aqa: null,
+    t: "Montgomery Bus Boycott, USA",
+    d: "Rosa Parks was arrested for refusing to give up her seat, and a year-long boycott of buses followed. The US civil rights movement inspired campaigners in Britain, including those in Bristol in 1963.",
+    p: "Rosa Parks, Martin Luther King Jr",
+    q: "Compare the Montgomery and Bristol boycotts. What was similar and what was different?" },
+  { era: "windrush", y: "1965", s: 1965, th: "rights", ks3: "mod", aqa: 4,
+    t: "First Race Relations Act",
+    d: "The Act banned racial discrimination in public places such as pubs and hotels, but it did not cover housing or jobs. The 1968 Act extended it to those areas. In the same year Enoch Powell’s ‘Rivers of Blood’ speech stirred fears about immigration.",
+    p: "Enoch Powell",
+    q: "How effective were the early Race Relations Acts?" },
+  { era: "windrush", y: "1971", s: 1971, th: "rights", ks3: "mod", aqa: 4,
+    t: "The Mangrove Nine trial",
+    d: "Police repeatedly raided the Mangrove restaurant in Notting Hill, and the community marched in protest. Nine protesters were tried and cleared of the most serious charges. The judge said there was evidence of ‘racial hatred’ in the Metropolitan Police.",
+    p: "Frank Crichlow, Altheia Jones-LeCointe, Darcus Howe",
+    q: "Why is the Mangrove Nine trial seen as a landmark?" },
+  { era: "windrush", y: "1981", s: 1981, th: "rights", ks3: "mod", aqa: 4,
+    t: "New Cross Fire and the Brixton uprising",
+    d: "Thirteen young Black people died in a house fire in New Cross in January. Many felt that the police and the media did not care, and about 20,000 people joined the Black People’s Day of Action. In April, tension over ‘sus’ stop-and-search led to the Brixton uprising and the Scarman Report.",
+    p: "John La Rose, Darcus Howe, Lord Scarman",
+    q: "Was 1981 a turning point for Black Britons’ relationship with the police?" },
+  { era: "windrush", y: "1987", s: 1987, th: "rights", ks3: "mod", aqa: 4,
+    t: "First Black MPs and Black History Month",
+    d: "Diane Abbott, Bernie Grant and Paul Boateng became the first Black MPs of the modern era. In the same year Akyaaba Addai-Sebo organised the first Black History Month in the UK, in London.",
+    p: "Diane Abbott, Bernie Grant, Paul Boateng, Akyaaba Addai-Sebo",
+    q: "Why does political representation matter?" },
+  { era: "windrush", y: "1993", s: 1993, th: "rights", ks3: "mod", aqa: 4,
+    t: "The murder of Stephen Lawrence",
+    d: "Stephen Lawrence, 18, was murdered in a racist attack in Eltham. His parents campaigned for justice. The Macpherson Report of 1999 found the Metropolitan Police ‘institutionally racist’. Two of his killers were convicted in 2012.",
+    p: "Stephen Lawrence, Doreen and Neville Lawrence",
+    q: "How did the Lawrence family’s campaign change British law and policing?" },
+
+  // Today
+  { era: "today", y: "2007", s: 2007, th: "culture", ks3: "mod", aqa: 4,
+    t: "Bicentenary of abolition",
+    d: "Britain marked 200 years since the 1807 Act, and the International Slavery Museum opened in Liverpool. Many people asked why commemorations focused on abolitionists rather than on enslaved people.",
+    p: "",
+    q: "How should Britain remember the transatlantic slave trade?" },
+  { era: "today", y: "2018", s: 2018, th: "migration", ks3: "mod", aqa: 4,
+    t: "The Windrush scandal",
+    d: "Journalists revealed that people who had arrived legally from the Caribbean before 1973 had been wrongly detained, refused healthcare or deported. The Home Secretary resigned, and a 2020 review blamed ‘institutional ignorance and thoughtlessness’ towards race.",
+    p: "Paulette Wilson, Amelia Gentleman, Wendy Williams",
+    q: "What were the causes and consequences of the Windrush scandal?" },
+  { era: "today", y: "2020", s: 2020, th: "rights", ks3: "mod", aqa: 4,
+    t: "Colston statue pulled down",
+    d: "During Black Lives Matter protests, demonstrators in Bristol toppled the statue of slave trader Edward Colston and threw it into the harbour. Four people charged with criminal damage were cleared in 2022, and the statue is now displayed in a museum.",
+    p: "Edward Colston",
+    q: "Should statues of people linked to slavery stay, move to museums or go?" },
+  { era: "today", y: "2022", s: 2022, th: "culture", ks3: "mod", aqa: 4,
+    t: "Benin Bronzes returned to Nigeria",
+    d: "The Horniman Museum in London transferred ownership of 72 objects taken in 1897 to Nigeria. Other British institutions, including the British Museum, have faced growing pressure to do the same.",
+    p: "",
+    q: "Who should own objects taken during the British Empire?" }
+];
+
+const state = { stage: "all", themes: new Set(), q: "", cur: null };
+const $ = (s) => document.querySelector(s);
+
+function esc(s) { return s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+function hl(s) {
+  const t = esc(s);
+  if (!state.q) return t;
+  const re = new RegExp("(" + state.q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
+  return t.replace(re, "<mark>$1</mark>");
+}
+function matches(e) {
+  if (state.stage === "ks3" && !e.ks3) return false;
+  if (state.stage === "ks4" && !e.aqa) return false;
+  if (state.themes.size && !state.themes.has(e.th)) return false;
+  if (state.cur) {
+    const [k, v] = state.cur;
+    if (k === "ks3" && e.ks3 !== v) return false;
+    if (k === "aqa" && String(e.aqa) !== v) return false;
+  }
+  if (state.q) {
+    const hay = (e.y + " " + e.t + " " + e.d + " " + e.p + " " + e.q).toLowerCase();
+    if (!hay.includes(state.q.toLowerCase())) return false;
+  }
+  return true;
+}
+
+function render() {
+  const sorted = [...EVENTS].sort((a, b) => a.s - b.s);
+  let html = "", shown = 0;
+  for (const era of ERAS) {
+    const evs = sorted.filter((e) => e.era === era.id && matches(e));
+    if (!evs.length) continue;
+    shown += evs.length;
+    html += `<section class="era" id="${era.id}"><div class="era-head"><span class="range">${era.range}</span><h2>${era.title}</h2><p>${era.intro}</p></div><ol class="events">`;
+    for (const e of evs) {
+      const th = THEMES[e.th];
+      const tags = [`<span class="tag theme" style="--c:${th.c}">${th.label}</span>`];
+      if (e.ks3) tags.push(`<span class="tag" title="${esc(KS3[e.ks3])}">KS3 · ${esc(KS3[e.ks3])}</span>`);
+      if (e.aqa) tags.push(`<span class="tag">AQA · ${AQA[e.aqa]}</span>`);
+      html += `<li class="ev" style="--c:${th.c}">
+        <div class="date">${hl(e.y)}</div>
+        <article class="card">
+          <h3>${hl(e.t)}</h3>
+          <p>${hl(e.d)}</p>
+          ${e.p ? `<div class="people"><b>Key people:</b> ${hl(e.p)}</div>` : ""}
+          <div class="ask"><b>Enquiry question:</b> ${hl(e.q)}</div>
+          <div class="tags">${tags.join("")}</div>
+        </article></li>`;
+    }
+    html += `</ol></section>`;
+  }
+  if (!shown) html = `<p class="empty">No events match these filters. Clear the search or choose fewer themes.</p>`;
+  $("#timeline").innerHTML = html;
+  $("#status").textContent = `Showing ${shown} of ${EVENTS.length} events`;
+
+  const cc = $("#curchip");
+  if (state.cur) {
+    const label = state.cur[0] === "ks3" ? "KS3 · " + KS3[state.cur[1]] : "AQA · " + AQA[state.cur[1]];
+    cc.innerHTML = `<button type="button" class="chip clear" id="clear-cur" style="--c:var(--accent)">${esc(label)} ✕</button>`;
+    $("#clear-cur").onclick = () => { state.cur = null; render(); };
+  } else cc.innerHTML = "";
+
+  document.querySelectorAll(".seg button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.stage === state.stage));
+  document.querySelectorAll("#themes .chip[data-th]").forEach((b) => b.setAttribute("aria-pressed", state.themes.has(b.dataset.th)));
+}
+
+function buildControls() {
+  const box = $("#themes");
+  box.innerHTML = Object.entries(THEMES).map(([k, v]) =>
+    `<button type="button" class="chip" id="th-${k}" data-th="${k}" aria-pressed="false" style="--c:${v.c}"><span class="dot"></span>${v.label}</button>`).join("");
+  box.addEventListener("click", (ev) => {
+    const b = ev.target.closest("[data-th]"); if (!b) return;
+    const k = b.dataset.th;
+    state.themes.has(k) ? state.themes.delete(k) : state.themes.add(k);
+    render();
+  });
+  document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => { state.stage = b.dataset.stage; render(); }));
+  $("#q").addEventListener("input", (ev) => { state.q = ev.target.value.trim(); render(); });
+
+  const count = (k, v) => EVENTS.filter((e) => String(e[k]) === v).length;
+  const item = (k, v, label) => `<li><button type="button" data-k="${k}" data-v="${v}"><span>${esc(label)}</span><span class="n">${count(k, v)}</span></button></li>`;
+  $("#map-ks3").innerHTML = Object.entries(KS3).map(([k, v]) => item("ks3", k, v)).join("");
+  $("#map-aqa").innerHTML = Object.entries(AQA).map(([k, v]) => item("aqa", k, v)).join("");
+  $("#map").addEventListener("click", (ev) => {
+    const b = ev.target.closest("button[data-k]"); if (!b) return;
+    state.cur = [b.dataset.k, b.dataset.v];
+    state.stage = "all";
+    render();
+    $("#timeline").scrollIntoView();
+  });
+}
+
+buildControls();
+render();
+</script>
